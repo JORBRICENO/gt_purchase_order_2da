@@ -4,19 +4,27 @@ using {
     cuid,
     managed,
     sap.common.Languages,
-    sap.common.Currencies
+    sap.common.Currencies,
+    sap.common.CodeList
 } from '@sap/cds/common';
+
+//** 
+/* Remote Services
+*/
+
+using {API_COMPANYCODE_SRV as Company} from '../srv/external/API_COMPANYCODE_SRV';
 
 entity PurchaseOrderHeader : cuid, managed {
     key PurchaseOrder          : String(10) not null;
-        CompanyCode            : String(4) not null;
+        CompanyCode            : Association to Company.A_CompanyCode;  //CompanyCode_CompanyCode
         PurchasingOrganization : String(4) not null;
         PurchasingGroup        : String(4) not null;
         PurchaseOrderType      : String(4) not null;
         Supplier               : String(10) not null;
         PurchaseOrderDate      : Date not null;
         DocumentCurrency       : Association to Currencies; //DocumentCurrency_code (ValueHelp - MatchCode)
-        Language               : Association to Languages;  //Language_code (ValueHelp - MatchCode)
+        Language               : Association to Languages; //Language_code (ValueHelp - MatchCode)
+        PurchaseOrderStatus    : Association to Status;     //PurchaseOrderStatus_code
         to_PurchaseOrderItem   : Composition of many PurchaseOrderItem
                                      on to_PurchaseOrderItem.PurchaseOrder = $self;
 }
@@ -38,4 +46,13 @@ entity PurchaseOrderItem : cuid {
         TaxCode                   : String(2);
         PurchasingInfoRecord      : String(10);
         PurchaseOrder             : Association to PurchaseOrderHeader;
+}
+
+entity Status : CodeList {
+    key code : String enum {
+            E = 'En espera';
+            P = 'Pendiente';
+            A = 'Aprobado';
+            R = 'Rechazado';
+        }
 }

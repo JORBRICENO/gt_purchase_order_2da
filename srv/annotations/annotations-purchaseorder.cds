@@ -12,18 +12,36 @@ annotate service.PurchaseOrder with {
     Supplier               @title: 'Supplier';
     Language               @title: 'Language';
     DocumentCurrency       @title: 'Currency';
+    PurchaseOrderStatus    @title: 'Purchase Order Status';
+};
+
+annotate service.PurchaseOrder with {
+    CompanyCode @Common: {
+        Text     : CompanyCode.CompanyCodeName,
+        ValueList: {
+            $Type         : 'Common.ValueListType',
+            CollectionPath: 'VH_Company',
+            Parameters    : [{
+                $Type            : 'Common.ValueListParameterInOut',
+                LocalDataProperty: CompanyCode_CompanyCode,
+                ValueListProperty: 'CompanyCode'
+            }]
+        }
+    }
 };
 
 
 annotate service.PurchaseOrder with @(
     UI.SelectionFields          : [
         PurchaseOrder,
-        CompanyCode,
+        CompanyCode_CompanyCode,
         PurchasingOrganization,
+        Supplier,
         PurchasingGroup,
         PurchaseOrderType,
         Language_code,
-        DocumentCurrency_code
+        DocumentCurrency_code,
+        PurchaseOrderStatus_code
     ],
     UI.HeaderInfo               : {
         $Type         : 'UI.HeaderInfoType',
@@ -45,7 +63,7 @@ annotate service.PurchaseOrder with @(
         },
         {
             $Type             : 'UI.DataField',
-            Value             : CompanyCode,
+            Value             : CompanyCode_CompanyCode,
             @HTML5.CssDefaults: {
                 $Type: 'HTML5.CssDefaultsType',
                 width: '8rem'
@@ -78,6 +96,14 @@ annotate service.PurchaseOrder with @(
                 $Type: 'HTML5.CssDefaultsType',
                 width: '12rem'
             }
+        },
+        {
+            $Type             : 'UI.DataField',
+            Value             : PurchaseOrderStatus_code,
+            @HTML5.CssDefaults: {
+                $Type: 'HTML5.CssDefaultsType',
+                width: '10rem'
+            }
         }
     ],
     UI.FieldGroup #PurchaseOrder: {
@@ -99,7 +125,7 @@ annotate service.PurchaseOrder with @(
         Data : [
             {
                 $Type: 'UI.DataField',
-                Value: CompanyCode
+                Value: CompanyCode_CompanyCode
             },
             {
                 $Type: 'UI.DataField',

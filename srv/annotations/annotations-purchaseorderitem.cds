@@ -83,9 +83,11 @@ annotate service.PurchaseOrderItem with @(
             }
         ]
     },
-    UI.Facets                       : [{
-        $Type : 'UI.ReferenceFacet',
-        Target: '@UI.FieldGroup#PurchaseOrderItem',
-        Label : 'Purchase Order Item Information'
-    }],
+    UI.Facets                       : [
+        {
+            $Type : 'UI.ReferenceFacet',
+            Target: '@UI.FieldGroup#PurchaseOrderItem',
+            Label : 'Purchase Order Item Information'
+        }
+    ]
 );
