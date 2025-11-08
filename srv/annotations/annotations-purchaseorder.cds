@@ -2,6 +2,8 @@ using {PurchaseOrder as service} from '../services';
 
 using from './annotations-purchaseorderitem';
 
+annotate service.PurchaseOrder with @odata.draft.enabled;
+
 annotate service.PurchaseOrder with {
     PurchaseOrder          @title: 'Purchase Order';
     CompanyCode            @title: 'Company Code';
@@ -17,16 +19,87 @@ annotate service.PurchaseOrder with {
 
 annotate service.PurchaseOrder with {
     CompanyCode @Common: {
-        Text     : CompanyCode.CompanyCodeName,
+        Text     : CompanyCodeName,
+        TextArrangement : #TextOnly,
         ValueList: {
             $Type         : 'Common.ValueListType',
             CollectionPath: 'VH_Company',
-            Parameters    : [{
-                $Type            : 'Common.ValueListParameterInOut',
-                LocalDataProperty: CompanyCode_CompanyCode,
-                ValueListProperty: 'CompanyCode'
-            }]
+            Parameters    : [
+                {
+                    $Type            : 'Common.ValueListParameterInOut',
+                    LocalDataProperty: CompanyCode_CompanyCode,
+                    ValueListProperty: 'CompanyCode'
+                },
+                {
+                    $Type : 'Common.ValueListParameterOut',
+                    LocalDataProperty : CompanyCodeName,
+                    ValueListProperty : 'CompanyCodeName'
+                }
+            ]
         }
+    };
+    PurchasingOrganization @Common: {
+        Text : PurchasingOrganizationName,
+        TextArrangement : #TextFirst,
+        ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'VH_PurchasingOrg',
+            Parameters : [
+                {
+                    $Type : 'Common.ValueListParameterIn',
+                    LocalDataProperty : CompanyCode_CompanyCode,
+                    ValueListProperty : 'CompanyCode',
+                },
+                {
+                    $Type : 'Common.ValueListParameterOut',
+                    LocalDataProperty : PurchasingOrganization_PurchasingOrganization,
+                    ValueListProperty : 'PurchasingOrganization'
+                },
+                {
+                    $Type : 'Common.ValueListParameterOut',
+                    LocalDataProperty : PurchasingOrganizationName,
+                    ValueListProperty : 'PurchasingOrganizationName'
+                }
+            ]
+        }
+    };
+    PurchasingGroup @Common: {
+        Text : PurchasingGroupName,
+        TextArrangement : #TextFirst,
+        ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'VH_PurchasingGroup',
+            Parameters : [
+                {
+                    $Type : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : PurchasingGroup_PurchasingGroup,
+                    ValueListProperty : 'PurchasingGroup'
+                },
+                {
+                    $Type : 'Common.ValueListParameterOut',
+                    LocalDataProperty : PurchasingGroupName,
+                    ValueListProperty : 'PurchasingGroupName'
+                }
+            ]
+        },
+    };
+    PurchaseOrderType @Common: {
+        ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'VH_PurchaseOrderType',
+            Parameters : [
+                {
+                    $Type : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : PurchaseOrderType_DocumentType,
+                    ValueListProperty : 'DocumentType'
+                },
+                {
+                    $Type : 'Common.ValueListParameterOut',
+                    LocalDataProperty : PurchaseOrderTypeName,
+                    ValueListProperty : 'Description'
+                }
+            ]
+        },
     }
 };
 
@@ -35,10 +108,10 @@ annotate service.PurchaseOrder with @(
     UI.SelectionFields          : [
         PurchaseOrder,
         CompanyCode_CompanyCode,
-        PurchasingOrganization,
+        PurchasingOrganization_PurchasingOrganization,
         Supplier,
-        PurchasingGroup,
-        PurchaseOrderType,
+        PurchasingGroup_PurchasingGroup,
+        PurchaseOrderType_DocumentType,
         Language_code,
         DocumentCurrency_code,
         PurchaseOrderStatus_code
@@ -71,7 +144,7 @@ annotate service.PurchaseOrder with @(
         },
         {
             $Type             : 'UI.DataField',
-            Value             : PurchasingOrganization,
+            Value             : PurchasingOrganization_PurchasingOrganization,
             @HTML5.CssDefaults: {
                 $Type: 'HTML5.CssDefaultsType',
                 width: '12rem'
@@ -79,7 +152,7 @@ annotate service.PurchaseOrder with @(
         },
         {
             $Type             : 'UI.DataField',
-            Value             : PurchasingGroup,
+            Value             : PurchasingGroup_PurchasingGroup,
             @HTML5.CssDefaults: {
                 $Type: 'HTML5.CssDefaultsType',
                 width: '10rem'
@@ -129,7 +202,7 @@ annotate service.PurchaseOrder with @(
             },
             {
                 $Type: 'UI.DataField',
-                Value: PurchasingOrganization
+                Value: PurchasingOrganization_PurchasingOrganization
             },
             {
                 $Type: 'UI.DataField',
@@ -137,11 +210,11 @@ annotate service.PurchaseOrder with @(
             },
             {
                 $Type: 'UI.DataField',
-                Value: PurchasingGroup
+                Value: PurchasingGroup_PurchasingGroup
             },
             {
                 $Type: 'UI.DataField',
-                Value: PurchaseOrderType
+                Value: PurchaseOrderType_DocumentType
             }
         ]
     },

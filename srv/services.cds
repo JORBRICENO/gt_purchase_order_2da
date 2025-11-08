@@ -5,6 +5,9 @@ using {com.globaltalent.purchaseorders as entities} from '../db/schema';
  */
 
  using {API_COMPANYCODE_SRV as Company} from './external/API_COMPANYCODE_SRV';
+ using {CE_PURCHASINGORGANIZATION_0001 as Organization} from './external/CE_PURCHASINGORGANIZATION_0001';
+ using {CE_PURCHASINGGROUP_0001 as Group} from './external/CE_PURCHASINGGROUP_0001';
+ using {ZPURCHASEORDERTYPE_READ as PurchaseOrderType} from './external/ZPURCHASEORDERTYPE_READ';
 
 service PurchaseOrder {
 
@@ -20,5 +23,30 @@ service PurchaseOrder {
      entity VH_Company as projection on Company.A_CompanyCode {
         key CompanyCode,
             CompanyCodeName
+     };
+
+     @readonly
+     @cds.persistence.exists
+     @cds.persistence.skip
+     entity VH_PurchasingOrg as projection on Organization.A_PurchasingOrganization {
+        key PurchasingOrganization,
+            PurchasingOrganizationName,
+            CompanyCode
+     };
+
+     @readonly
+     @cds.persistence.exists
+     @cds.persistence.skip
+     entity VH_PurchasingGroup as projection on Group.A_PurchasingGroup{
+        key PurchasingGroup,
+            PurchasingGroupName
+     };
+
+    @readonly
+     @cds.persistence.exists
+     @cds.persistence.skip
+     entity VH_PurchaseOrderType as projection on PurchaseOrderType.PurchaseOrderType{
+        key DocumentType,
+            Description
      };
 }

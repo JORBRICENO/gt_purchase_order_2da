@@ -8,25 +8,32 @@ using {
     sap.common.CodeList
 } from '@sap/cds/common';
 
-//** 
+//**
 /* Remote Services
 */
 
 using {API_COMPANYCODE_SRV as Company} from '../srv/external/API_COMPANYCODE_SRV';
+using {CE_PURCHASINGORGANIZATION_0001 as PurchasingOrg} from '../srv/external/CE_PURCHASINGORGANIZATION_0001';
+using {CE_PURCHASINGGROUP_0001 as Group} from '../srv/external/CE_PURCHASINGGROUP_0001';
+using {ZPURCHASEORDERTYPE_READ as PurchaseOrderType} from '../srv/external/ZPURCHASEORDERTYPE_READ';
 
 entity PurchaseOrderHeader : cuid, managed {
-    key PurchaseOrder          : String(10) not null;
-        CompanyCode            : Association to Company.A_CompanyCode;  //CompanyCode_CompanyCode
-        PurchasingOrganization : String(4) not null;
-        PurchasingGroup        : String(4) not null;
-        PurchaseOrderType      : String(4) not null;
-        Supplier               : String(10) not null;
-        PurchaseOrderDate      : Date not null;
-        DocumentCurrency       : Association to Currencies; //DocumentCurrency_code (ValueHelp - MatchCode)
-        Language               : Association to Languages; //Language_code (ValueHelp - MatchCode)
-        PurchaseOrderStatus    : Association to Status;     //PurchaseOrderStatus_code
-        to_PurchaseOrderItem   : Composition of many PurchaseOrderItem
-                                     on to_PurchaseOrderItem.PurchaseOrder = $self;
+    key PurchaseOrder              : String(10) not null;
+        CompanyCode                : Association to Company.A_CompanyCode; //CompanyCode_CompanyCode
+        CompanyCodeName            : String(25);
+        PurchasingOrganization     : Association to PurchasingOrg.A_PurchasingOrganization; //PurchasingOrganization_PurchasingOrganization
+        PurchasingOrganizationName : String(20);
+        PurchasingGroup            : Association to Group.A_PurchasingGroup; //PurchasingGroup_PurchasingGroup
+        PurchasingGroupName        : String(18);
+        PurchaseOrderType          : Association to PurchaseOrderType.PurchaseOrderType;    //PurchaseOrderType_DocumentType
+        PurchaseOrderTypeName      : String(10);
+        Supplier                   : String(10) not null;
+        PurchaseOrderDate          : Date not null;
+        DocumentCurrency           : Association to Currencies; //DocumentCurrency_code (ValueHelp - MatchCode)
+        Language                   : Association to Languages; //Language_code (ValueHelp - MatchCode)
+        PurchaseOrderStatus        : Association to Status; //PurchaseOrderStatus_code
+        to_PurchaseOrderItem       : Composition of many PurchaseOrderItem
+                                         on to_PurchaseOrderItem.PurchaseOrder = $self;
 }
 
 entity PurchaseOrderItem : cuid {
