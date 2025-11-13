@@ -4,3 +4,5 @@ using from './annotations-organizations';
 using from './annotations-group';
 using from './annotations-suppliers';
 using from './annotations-status';
+using from './annotations-plant';
+using from './annotations-storagelocation';

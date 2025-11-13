@@ -17,6 +17,8 @@ using {CE_PURCHASINGORGANIZATION_0001 as PurchasingOrg} from '../srv/external/CE
 using {CE_PURCHASINGGROUP_0001 as Group} from '../srv/external/CE_PURCHASINGGROUP_0001';
 using {ZPURCHASEORDERTYPE_READ as PurchaseOrderType} from '../srv/external/ZPURCHASEORDERTYPE_READ';
 using {API_BUSINESS_PARTNER as BusinessPartner} from '../srv/external/API_BUSINESS_PARTNER';
+using {API_PLANT_SRV as Plant} from '../srv/external/API_PLANT_SRV';
+using {API_STORAGELOCATION_SRV as StorageLocation} from '../srv/external/API_STORAGELOCATION_SRV';
 
 entity PurchaseOrderHeader : cuid, managed {
     key PurchaseOrder              : String(10) @Core.Computed;
@@ -40,28 +42,35 @@ entity PurchaseOrderHeader : cuid, managed {
 entity PurchaseOrderItem : cuid {
     key PurchaseOrderItem         : String(5) @Core.Computed;
         PurchaseOrderItemText     : String(40);
-        Plant                     : String(4);
-        StorageLocation           : String(4);
+        Plant                     : Association to Plant.A_Plant; //Plant_Plant
+        PlantName                 : String(30);
+        StorageLocation           : Association to StorageLocation.StorageLocation; //StorageLocation_StorageLocation
+        StorageLocationName       : String(16);
         Material                  : String(40);
         MaterialGroup             : String(9);
         ProductType               : String(2);
         OrderQuantity             : Decimal;
-        OrderPriceUnit            : String(3);
+        OrderPriceUnit            : Association to UnitMeasures; //OrderPriceUnit_BaseUnit KG PC
         NetPriceAmount            : Decimal;
-        DocumentCurrency          : String(5);
+        DocumentCurrency          : Association to Currencies;
         NetPriceQuantity          : Decimal;
-        PurchaseOrderQuantityUnit : String(3);
+        PurchaseOrderQuantityUnit : Association to UnitMeasures;
         TaxCode                   : String(2);
         PurchasingInfoRecord      : String(10);
-        PurchaseOrder             : Association to PurchaseOrderHeader;
+        PurchaseOrder             : Association to PurchaseOrderHeader; //PurchaseOrder (NavTo) PurchaseOrder_ID && PurchaseOrder_PurchaseOrder
 }
 
 entity Status : CodeList {
-    key code : String enum {
+    key code        : String enum {
             E = 'En espera';
             P = 'Pendiente';
             A = 'Aprobado';
             R = 'Rechazado';
         }
-    criticality: Int16;
-}
+        criticality : Int16;
+};
+
+entity UnitMeasures {
+    key BaseUnit : String(3);
+        UnitName : String(30);
+};

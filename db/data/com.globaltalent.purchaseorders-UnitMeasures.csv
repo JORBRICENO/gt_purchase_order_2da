@@ -1,0 +1,62 @@
+BaseUnit;UnitName
+EA;Each
+PC;Piece
+KG;Kilogram
+G;Gram
+M;Meter
+CM;Centimeter
+L;Liter
+BOX;Box
+PAL;Pallet
+HUR;Hour
+DAY;Day
+LB;Pound
+ROL;Roll
+SET;Set
+M2;Square Meter
+M3;Cubic Meter
+FT;Foot
+FT2;Square foot
+FT3;Cubic foot
+IN;Inch
+IN2;Square inch
+IN3;Cubic inch
+GAL;US gallon
+ML;Milliliter
+MM;Millimeter
+MM2;Square millimeter
+MM3;Cubic millimeter
+MI;Mile
+MI2;Square mile
+YD;Yard
+YD2;Square yard
+YD3;Cubic yard
+ACR;Acre
+BAG;Bag
+BBL;Barrel
+BOT;Bottle
+CAN;Can
+CAR;Carton
+CE;Case
+CRT;Crate
+DZN;Dozen
+DRM;Drum
+HA;Hectare
+KIT;Kit
+LOT;Lot
+MON;Month
+OZ;Ounce
+PR;Pair
+PAC;Pack
+T;Tonne (metric)
+TON;Ton, short (2000 lb)
+WK;Week
+YR;Year
+MIN;Minute
+S;Second
+KM;Kilometer
+KM2;Square kilometer
+KW;Kilowatt
+KWH;Kilowatt hour
+AU;Activity Unit
+JOB;Job

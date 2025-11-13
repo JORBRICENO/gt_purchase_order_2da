@@ -1,0 +1,73 @@
+{
+ "meta": {
+  "creator": "cds-dk 9.4.3"
+ },
+ "$version": "2.0",
+ "definitions": {
+  "API_STORAGELOCATION_SRV": {
+   "kind": "service",
+   "@cds.external": true,
+   "@m.IsDefaultEntityContainer": "true",
+   "@sap.message.scope.supported": "true",
+   "@sap.supported.formats": "atom json xlsx"
+  },
+  "API_STORAGELOCATION_SRV.StorageLocation": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "@sap.creatable": "false",
+   "@sap.updatable": "false",
+   "@sap.deletable": "false",
+   "@sap.content.version": "1",
+   "@sap.label": "Storage Location",
+   "elements": {
+    "Plant": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "@sap.display.format": "UpperCase",
+     "@sap.label": "Plant",
+     "notNull": true
+    },
+    "StorageLocation": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "@sap.display.format": "UpperCase",
+     "@sap.label": "Storage location",
+     "notNull": true
+    },
+    "StorageLocationName": {
+     "type": "cds.String",
+     "length": 16,
+     "@sap.label": "Storage Loc. Name",
+     "@sap.quickinfo": "Storage Location Name"
+    },
+    "SalesOrganization": {
+     "type": "cds.String",
+     "length": 4,
+     "@sap.display.format": "UpperCase",
+     "@sap.label": "Sales Organization"
+    },
+    "DistributionChannel": {
+     "type": "cds.String",
+     "length": 2,
+     "@sap.display.format": "UpperCase",
+     "@sap.label": "Distribution Channel"
+    },
+    "Division": {
+     "type": "cds.String",
+     "length": 2,
+     "@sap.display.format": "UpperCase",
+     "@sap.label": "Division"
+    },
+    "IsStorLocAuthznCheckActive": {
+     "type": "cds.Boolean",
+     "@sap.display.format": "UpperCase",
+     "@sap.label": "Authorization check",
+     "@sap.quickinfo": "Storage location authorization for goods movements active"
+    }
+   }
+  }
+ }
+}

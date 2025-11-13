@@ -13,7 +13,9 @@ module.exports = class PurchaseOrder extends cds.ApplicationService {
             VH_PurchasingOrg,
             VH_PurchasingGroup,
             VH_PurchaseOrderType,
-            VH_Supplier
+            VH_Supplier,
+            VH_Plant,
+            VH_StorageLocation
         } = this.entities;
 
         const api_company = await cds.connect.to("API_COMPANYCODE_SRV");
@@ -21,6 +23,8 @@ module.exports = class PurchaseOrder extends cds.ApplicationService {
         const api_purchasinggroup = await cds.connect.to("CE_PURCHASINGGROUP_0001");
         const api_purchaseordertype = await cds.connect.to("ZPURCHASEORDERTYPE_READ");
         const api_supplier = await cds.connect.to("API_BUSINESS_PARTNER");
+        const api_plant = await cds.connect.to("API_PLANT_SRV");
+        const api_storagelocation = await cds.connect.to("API_STORAGELOCATION_SRV");
 
         /**
          * Custom Logic
@@ -142,6 +146,24 @@ module.exports = class PurchaseOrder extends cds.ApplicationService {
                 PurchasingOrganization: purchasingOrg
             }));
 
+        });
+
+        this.on('READ', VH_Plant, async (req) => {
+            return await api_plant.tx(req).send({
+                query: req.query, 
+                headers: {
+                    Authorization: process.env.AUTHORIZATION
+                }
+            })
+        });
+
+        this.on('READ', VH_StorageLocation, async (req) => {
+            return await api_storagelocation.tx(req).send({
+                query: req.query, 
+                headers: {
+                    Authorization: process.env.AUTHORIZATION
+                }
+            })
         });
 
         return super.init();

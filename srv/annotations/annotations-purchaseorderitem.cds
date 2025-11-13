@@ -8,13 +8,81 @@ annotate service.PurchaseOrderItem with {
     Material                   @title: 'Material';
     MaterialGroup              @title: 'Material Group';
     ProductType                @title: 'Product Type';
-    OrderQuantity              @title: 'Order Quantity'                @Measures.Unit       : PurchaseOrderQuantityUnit;
+    OrderQuantity              @title: 'Order Quantity'                @Measures.Unit       : OrderPriceUnit;
+    OrderPriceUnit             @title: 'Order Price Unit'              @Common.IsUnit;
     NetPriceAmount             @title: 'Net Price Amount'              @Measures.ISOCurrency: DocumentCurrency;
     NetPriceQuantity           @title: 'Net Price Quantity'            @Measures.Unit       : PurchaseOrderQuantityUnit;
     DocumentCurrency           @title: 'Currency'                      @Common.IsCurrency;
     PurchaseOrderQuantityUnit  @title: 'Purchase Order Quantity Unit'  @Common.IsUnit;
     TaxCode                    @title: 'Tax Code';
     PurchasingInfoRecord       @title: 'Purchasing Info Record';
+};
+
+annotate service.PurchaseOrderItem with {
+    Plant                     @Common: {ValueList: {
+        $Type         : 'Common.ValueListType',
+        CollectionPath: 'VH_Plant',
+        Parameters    : [
+            {
+                $Type            : 'Common.ValueListParameterIn',
+                LocalDataProperty: PurchaseOrder.CompanyCode_CompanyCode,
+                ValueListProperty: 'CompanyCode'
+            },
+            {
+                $Type            : 'Common.ValueListParameterOut',
+                LocalDataProperty: Plant_Plant,
+                ValueListProperty: 'Plant'
+            },
+            {
+                $Type            : 'Common.ValueListParameterOut',
+                LocalDataProperty: PlantName,
+                ValueListProperty: 'PlantName'
+            },
+        // {
+        //     $Type            : 'Common.ValueListParameterDisplayOnly',
+        //     ValueListProperty: 'CompanyCode'
+        // }
+        ]
+    }};
+    StorageLocation           @Common: {ValueList: {
+        $Type         : 'Common.ValueListType',
+        CollectionPath: 'VH_StorageLocation',
+        Parameters    : [
+            {
+                $Type            : 'Common.ValueListParameterIn',
+                LocalDataProperty: Plant_Plant,
+                ValueListProperty: 'Plant'
+            },
+            {
+                $Type            : 'Common.ValueListParameterOut',
+                LocalDataProperty: StorageLocation_StorageLocation,
+                ValueListProperty: 'StorageLocation'
+            },
+            {
+                $Type            : 'Common.ValueListParameterOut',
+                LocalDataProperty: StorageLocationName,
+                ValueListProperty: 'StorageLocationName'
+            }
+        ]
+    }};
+    OrderPriceUnit            @Common: {ValueList: {
+        $Type         : 'Common.ValueListType',
+        CollectionPath: 'VH_UnitMeasure',
+        Parameters    : [{
+            $Type            : 'Common.ValueListParameterInOut',
+            LocalDataProperty: OrderPriceUnit_BaseUnit,
+            ValueListProperty: 'BaseUnit'
+        }]
+    }};
+    PurchaseOrderQuantityUnit @Common: {ValueList: {
+        $Type         : 'Common.ValueListType',
+        CollectionPath: 'VH_UnitMeasure',
+        Parameters    : [{
+            $Type            : 'Common.ValueListParameterInOut',
+            LocalDataProperty: PurchaseOrderQuantityUnit_BaseUnit,
+            ValueListProperty: 'BaseUnit'
+        }]
+    }}
 };
 
 
@@ -43,7 +111,7 @@ annotate service.PurchaseOrderItem with @(
         },
         {
             $Type             : 'UI.DataField',
-            Value             : Plant,
+            Value             : Plant_Plant,
             @HTML5.CssDefaults: {
                 $Type: 'HTML5.CssDefaultsType',
                 width: '6rem'
@@ -51,7 +119,7 @@ annotate service.PurchaseOrderItem with @(
         },
         {
             $Type             : 'UI.DataField',
-            Value             : StorageLocation,
+            Value             : StorageLocation_StorageLocation,
             @HTML5.CssDefaults: {
                 $Type: 'HTML5.CssDefaultsType',
                 width: '10rem'
@@ -92,11 +160,11 @@ annotate service.PurchaseOrderItem with @(
         Data : [
             {
                 $Type: 'UI.DataField',
-                Value: Plant
+                Value: Plant_Plant
             },
             {
                 $Type: 'UI.DataField',
-                Value: StorageLocation
+                Value: StorageLocation_StorageLocation
             }
         ]
     },
@@ -126,11 +194,23 @@ annotate service.PurchaseOrderItem with @(
             },
             {
                 $Type: 'UI.DataField',
+                Value: OrderPriceUnit_BaseUnit,
+            },
+            {
+                $Type: 'UI.DataField',
                 Value: NetPriceAmount
             },
             {
                 $Type: 'UI.DataField',
+                Value: DocumentCurrency_code,
+            },
+            {
+                $Type: 'UI.DataField',
                 Value: NetPriceQuantity
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: PurchaseOrderQuantityUnit_BaseUnit,
             }
         ]
     },
