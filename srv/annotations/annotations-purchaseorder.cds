@@ -224,14 +224,21 @@ annotate service.PurchaseOrder with @(
             {
                 $Type               : 'UI.DataField',
                 Value               : PurchaseOrderStatus_code,
-                @Common.FieldControl: {$edmJson: {$If: [
-                    {$Eq: [
-                        {$Path: 'IsActiveEntity'},
-                        false
-                    ]},
-                    1,
-                    3
-                ]}}
+                @Common.FieldControl: {
+                $edmJson: {
+                        $If: [
+                                {
+                                    $Eq: [
+                                        {
+                                            $Path: 'IsActiveEntity'
+                                        },
+                                        false
+                                    ]
+                                },
+                                1,      //Readonly
+                                3       //Optional
+                            ]
+                }}
             }
         ]
     },

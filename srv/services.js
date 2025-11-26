@@ -1,7 +1,7 @@
 const cds = require('@sap/cds');
-const { data } = require('@sap/cds/lib/dbs/cds-deploy');
-const { SELECT, UPDATE } = require('@sap/cds/lib/ql/cds-ql');
 const moment = require('moment');
+const axios = require('axios');
+const { UPDATE } = require('@sap/cds/lib/ql/cds-ql');
 
 module.exports = class PurchaseOrder extends cds.ApplicationService {
 
@@ -47,7 +47,7 @@ module.exports = class PurchaseOrder extends cds.ApplicationService {
                                         item`.*`
                                     })
                                 }).where({ID: parentId});
-
+            let newFormat = new Date(result.PurchaseOrderDate+"T00:00:00").getTime();
 
             let payload = {
                 "CompanyCode": result.CompanyCode_CompanyCode,
@@ -55,7 +55,7 @@ module.exports = class PurchaseOrder extends cds.ApplicationService {
                 "PurchasingGroup": result.PurchasingGroup_PurchasingGroup,
                 "PurchaseOrderType": result.PurchaseOrderType_DocumentType,
                 "Supplier": result.Supplier_Supplier,
-                "PurchaseOrderDate": new Date(result.PurchaseOrderDate),
+                "PurchaseOrderDate": `/Date(${newFormat})/`,
                 "DocumentCurrency": result.DocumentCurrency_code,
                 "to_PurchaseOrderItem": result.to_PurchaseOrderItem.map((item)=> ({
                     "PurchaseOrderItem": item.PurchaseOrderItem,
@@ -74,7 +74,7 @@ module.exports = class PurchaseOrder extends cds.ApplicationService {
                     "to_ScheduleLine": [
                         {
                             "ScheduleLine": "1",
-                            "ScheduleLineDeliveryDate": new Date(result.PurchaseOrderDate),
+                            "ScheduleLineDeliveryDate": `/Date(${newFormat})/`,
                             "ScheduleLineOrderQuantity": String(item.OrderQuantity)
                         }
                     ]
@@ -82,6 +82,49 @@ module.exports = class PurchaseOrder extends cds.ApplicationService {
             };
 
             console.log(payload);
+
+            const url = process.env.HOST;
+            const entity = '/A_PurchaseOrder';
+            const basicAuth = process.env.AUTHORIZATION;
+
+            const service = axios.create({
+                baseURL: url,
+                headers: {
+                    'Authorization': basicAuth
+                }
+            });
+
+            try {
+
+                const tokenResponse = await service.get(entity, {
+                    headers: {
+                        'X-CSRF-TOKEN': 'Fetch'
+                    }
+                });
+
+                let token = tokenResponse.headers['x-csrf-token'];
+                let cookie = tokenResponse.headers['set-cookie'];
+
+
+                if (!token || !cookie) {
+                    throw new Error("No se pudo obtener el token y el cookie de la sesión");
+                }
+
+                await service.post(entity, payload, {
+                    headers: {
+                        'X-CSRF-TOKEN': token,
+                        'Cookie': cookie
+                    }
+                }).then(async (response) => {
+                    req.info("El registro a sido realizado de forma correcta");
+                    await UPDATE.entity(PurchaseOrder).set({PurchaseOrderStatus_code: 'A'}).where({ID: parentId});
+                });
+
+            } catch (error) {
+                await UPDATE.entity(PurchaseOrder).set({PurchaseOrderStatus_code: 'R'}).where({ID: parentId});
+            }
+
+            
         });
 
         this.before('NEW', PurchaseOrder.drafts, async (req) => {

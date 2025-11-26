@@ -17,7 +17,31 @@ using {API_INFORECORD_PROCESS_SRV as InfoRecord} from './external/API_INFORECORD
 service PurchaseOrder {
 
     entity PurchaseOrder        as projection on entities.PurchaseOrderHeader actions {
-        action submitOrder () returns PurchaseOrder;
+        @Core.OperationAvailable: {
+            $edmJson: {
+                $If:[
+                    {
+                        $Eq: [
+                            {
+                                $Path: 'in/PurchaseOrderStatus_code'
+                            },
+                            'A'
+                        ]
+                    },
+                    false,
+                    true
+                ]
+            }
+        }
+        @Common: {
+            SideEffects : {
+                $Type : 'Common.SideEffectsType',
+                TargetProperties : [
+                    'in/PurchaseOrderStatus_code',
+                ],
+            },
+        }
+        action submitOrder (in : $self) returns PurchaseOrder;
     };
     entity PurchaseOrderItem    as projection on entities.PurchaseOrderItem;
 

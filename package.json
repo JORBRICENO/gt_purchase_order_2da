@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Purchase Orders - Cloud Application Programming Model",
   "dependencies": {
+    "@cap-js/postgres": "^2.0.6",
     "@sap-cloud-sdk/connectivity": "^3.26.4",
     "@sap-cloud-sdk/http-client": "^3.26.4",
     "@sap-cloud-sdk/resilience": "^3.26.4",

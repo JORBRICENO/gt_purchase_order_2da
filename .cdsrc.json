@@ -9,15 +9,15 @@
             },
             "auth":"mocked"
         },
-        "[qa]": {
+        "[pg]": {
             "db": {
                 "kind":"postgres",
                 "credentials": {
-                    "port":"",
-                    "host":"",
-                    "database":"",
-                    "user":"",
-                    "password":""
+                    "host":"localhost",
+                    "port":5000,
+                    "user":"purchaseorder",
+                    "password":"purchaseorder",
+                    "database":"purchaseorder"
                 }
             },
             "auth":"mocked"
