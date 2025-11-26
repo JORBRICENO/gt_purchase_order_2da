@@ -16,6 +16,16 @@ using {API_INFORECORD_PROCESS_SRV as InfoRecord} from './external/API_INFORECORD
 
 service PurchaseOrder {
 
+    @restrict: [
+        {
+            grant: ['READ'],
+            to: ['ROL_READ']
+        },
+        {
+            grant: ['*'],
+            to: ['ROL_ADMIN']
+        }
+    ]
     entity PurchaseOrder        as projection on entities.PurchaseOrderHeader actions {
         @Core.OperationAvailable: {
             $edmJson: {

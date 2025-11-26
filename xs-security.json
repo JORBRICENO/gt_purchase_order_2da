@@ -1,0 +1,33 @@
+{
+  "xsappname":"gt_purchaseorder_2da",
+  "tenant-mode":"dedicated",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.ROL_READ",
+      "description": "ROL_READ"
+    },
+    {
+      "name": "$XSAPPNAME.ROL_ADMIN",
+      "description": "ROL_ADMIN"
+    }
+  ],
+  "attributes": [],
+  "role-templates": [
+    {
+      "name": "ROL_READ",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.ROL_READ"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "ROL_ADMIN",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.ROL_ADMIN"
+      ],
+      "attribute-references": []
+    }
+  ]
+}
